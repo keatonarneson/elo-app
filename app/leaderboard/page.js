@@ -1,13 +1,18 @@
+import { headers } from 'next/headers';
+
 export const dynamic = 'force-dynamic';
 // or use: export const revalidate = 0;
 // This ensures our leaderboard fetch is always fresh (no caching).
 
 export default async function LeaderboardPage() {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    // Fetch from our /api/players route
-    const res = await fetch(`${baseUrl}/api/players`, { cache: 'no-store' });
+    const h = headers();
+    const protocol = h.get('x-forwarded-proto') || 'http';
+    const host = h.get('x-forwarded-host') || 'localhost:3000';
 
-    // Parse JSON
+    // Build a dynamic URL
+    const url = `${protocol}://${host}/api/players`;
+
+    const res = await fetch(url, { cache: 'no-store' });
     const players = await res.json();
 
     // Sort players by descending ELO
