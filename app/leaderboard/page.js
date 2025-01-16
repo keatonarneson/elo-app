@@ -3,10 +3,9 @@ export const dynamic = 'force-dynamic';
 // This ensures our leaderboard fetch is always fresh (no caching).
 
 export default async function LeaderboardPage() {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     // Fetch from our /api/players route
-    const res = await fetch('http://localhost:3000/api/players', {
-        cache: 'no-store',
-    });
+    const res = await fetch(`${baseUrl}/api/players`, { cache: 'no-store' });
 
     // Parse JSON
     const players = await res.json();
